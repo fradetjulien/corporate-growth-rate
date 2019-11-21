@@ -21,12 +21,12 @@ def is_result_empty(driver):
 
 def load_data(ticker):
     """
-    Create a new instance of the Chrome driver and go to the Yahoo Finance website, then configure the search
+    Launch a new Chrome driver instance, go to the Yahoo Finance website, then configure the search
     """
     try:
         driver = webdriver.Chrome(executable_path=".//chromedriver")
         driver.get("https://finance.yahoo.com/quote/" + ticker + "/financials?p=" + ticker)
-        if is_result_empty(driver) == True:
+        if is_result_empty(driver):
             driver.quit()
             return None
     except:
@@ -40,7 +40,7 @@ def handle_input(message):
     '''
     ticker = input(message)
     if not ticker.isalpha():
-        handle_input(message='Wrong ticker, please insert a valid ticker :\n')
+        handle_input('Wrong ticker, please insert a valid ticker :\n')
     return ticker
 
 @click.group()
@@ -55,7 +55,7 @@ def corporate_profit_revenues():
     Display the total revenue and net income of a Company
     '''
     while True:
-        ticker = handle_input(message='Please, choose a Company and insert the corresponding ticker :\n')
+        ticker = handle_input('Please, choose a Company and insert the corresponding ticker :\n')
         driver = load_data(ticker)
         if driver:
             scrap_data(driver)
