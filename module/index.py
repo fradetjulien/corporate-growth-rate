@@ -19,6 +19,7 @@ def compute_results(data):
     '''
     data = compute_growth_rate(data)
     data = compute_profit_margin(data)
+    print(data)
     return data
 
 def scrap_values(data, driver, path, variable):
@@ -77,26 +78,13 @@ def scrap_data(driver):
                         div[1]/div[1]/div/div[{}]', 'dates')
     return data
 
-def is_result_available(driver):
-    '''
-    Check if the loaded page has available data
-    '''
-    try:
-        path = '//*[@id="quote-summary"]/div[1]/table/tbody/tr[1]/td[2]/span'
-        error = driver.find_element_by_xpath(path)
-        if error and 'N/A' in error.text:
-            return True
-    except:
-        return False
-
-def is_result_empty(driver):
+def is_result(driver, path, error_message):
     '''
     Check if the loaded page has find the data
     '''
-    path = '//*[@id="lookup-page"]/section/div/h2/span'
     try:
         error = driver.find_element_by_xpath(path)
-        if error and 'Symbols similar to' in error.text:
+        if error and error_message in error.text:
             return True
     except:
         return False
@@ -108,7 +96,8 @@ def load_data(ticker):
     try:
         driver = webdriver.Chrome(executable_path=".//chromedriver")
         driver.get("https://finance.yahoo.com/quote/" + ticker + "/financials?p=" + ticker)
-        if is_result_empty(driver) or is_result_available(driver):
+        if is_result(driver, '//*[@id="lookup-page"]/section/div/h2/span', 'Symbols similar to') \
+           or is_result(driver, '//*[@id="quote-summary"]/div[1]/table/tbody/tr[1]/td[2]/span', 'N/A'):
             driver.quit()
             return None
     except:
