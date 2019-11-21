@@ -1,9 +1,29 @@
 import click
 from selenium import webdriver
 
+def compute_profit_margin(data):
+    '''
+    Compute the profit margin for each year
+    '''
+    return data
+
+def compute_growth_rate(data):
+    '''
+    Compute the year-on-year revenue growth
+    '''
+    return data
+
+def compute_results(data):
+    '''
+    Determine the annual growth rate as well as the profit margin
+    '''
+    data = compute_growth_rate(data)
+    data = compute_profit_margin(data)
+    return data
+
 def scrap_values(data, driver, path, variable):
     '''
-    Scrap the Total Revenue of the Company from the data table loaded previously
+    Scrap values of the Company from the data table previously loaded
     '''
     index = 1
     try:
@@ -17,7 +37,7 @@ def scrap_values(data, driver, path, variable):
 
 def scrap_company_name(data, driver):
     '''
-    Scrap the Company name from the data table loaded previously
+    Scrap the Company name from the data table previously loaded
     '''
     try:
         data["company_name"] = driver.find_element_by_xpath(\
@@ -34,7 +54,9 @@ def init_data():
         "company_name": None,
         "total_revenue": [],
         "net_income": [],
-        "dates": []
+        "dates": [],
+        "growth_rate": [],
+        "profit_margin": []
     }
     return data
 
@@ -118,7 +140,8 @@ def corporate_profit_revenues():
         ticker = handle_input('Please, choose a Company and insert the corresponding ticker :\n')
         driver = load_data(ticker)
         if driver:
-            scrap_data(driver)
+            data = scrap_data(driver)
+            data = compute_results(data)
             driver.quit()
             break
 
