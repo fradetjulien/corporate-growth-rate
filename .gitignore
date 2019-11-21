@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+module/Pipfile.lock
+module/chromedriver
+
 # Distribution / packaging
 .Python
 build/
