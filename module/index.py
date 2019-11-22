@@ -2,17 +2,6 @@ import click
 from selenium import webdriver
 from matplotlib import pyplot as plt
 
-def display_data(data):
-    '''
-    Display on the CLI all scrapped or computed data
-    '''
-    print("Company Name : {}\n".format(data["company_name"]))
-    print("Total Revenue : {}\n".format(data["total_revenue"]))
-    print("Net Income : {}\n".format(data["net_income"]))
-    print("Dates : {}\n".format(data["dates"]))
-    print("Growth Rate : {}\n".format(data["growth_rate"]))
-    print("Margin Profit : {}\n".format(data["profit_margin"]))
-
 def build_growth_rate_graph(data):
     '''
     Build the Company Growth Rate graphic
@@ -191,6 +180,7 @@ def is_result(driver, path, error_message):
             return True
     except:
         return False
+    return False
 
 def load_data(ticker):
     """
@@ -200,7 +190,8 @@ def load_data(ticker):
         driver = webdriver.Chrome(executable_path=".//chromedriver")
         driver.get("https://finance.yahoo.com/quote/" + ticker + "/financials?p=" + ticker)
         if is_result(driver, '//*[@id="lookup-page"]/section/div/h2/span', 'Symbols similar to') \
-           or is_result(driver, '//*[@id="quote-summary"]/div[1]/table/tbody/tr[1]/td[2]/span', 'N/A'):
+           or is_result(driver, '//*[@id="quote-summary"]/div[1]/table/tbody/tr[1]/td[2]/span',
+                        'N/A'):
             driver.quit()
             return None
     except:
