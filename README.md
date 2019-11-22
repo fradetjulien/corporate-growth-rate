@@ -1,5 +1,7 @@
 # corporate-profit-revenues
 
+Python script which scrapts data from the financial statements page of a ticker page, then it computes the annual growth rate and the annual profit margin for each year. Finally, it shows two graphics of those results.
+
 ## Installation
 
 Python 3 and Pipenv are required in order to run this program.
