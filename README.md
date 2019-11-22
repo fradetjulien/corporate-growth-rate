@@ -25,6 +25,10 @@ pipenv run python3 index.py
 
 ## Example
 
+<p align="center">
+  <img src="assets/cli-illustration.png" width="650">
+  <img src="assets/graphics-illustration.png" width="650">
+</p>
 
 ## Executable
 

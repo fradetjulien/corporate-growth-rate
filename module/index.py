@@ -2,6 +2,17 @@ import click
 from selenium import webdriver
 from matplotlib import pyplot as plt
 
+def display_data(data):
+    '''
+    Display on the CLI all scrapped or computed data
+    '''
+    print("Company Name : {}\n".format(data["company_name"]))
+    print("Total Revenue : {}\n".format(data["total_revenue"]))
+    print("Net Income : {}\n".format(data["net_income"]))
+    print("Dates : {}\n".format(data["dates"]))
+    print("Growth Rate : {}\n".format(data["growth_rate"]))
+    print("Margin Profit : {}\n".format(data["profit_margin"]))
+
 def build_growth_rate_graph(data):
     '''
     Build the Company Growth Rate graphic
@@ -12,7 +23,7 @@ def build_growth_rate_graph(data):
             plt.subplot(2, 1, 2)
             plt.plot(data["dates"][1:], data["growth_rate"])
             plt.grid(True)
-            plt.ylabel("Growth Rate")
+            plt.ylabel("% of Growth Rate")
             plt.xlabel("Years")
             plt.title("{} Growth Rate".format(data["company_name"]))
             plt.tight_layout()
@@ -30,7 +41,7 @@ def build_profit_margin_graph(data):
             plt.subplot(2, 1, 1)
             plt.plot(data["dates"], data["profit_margin"])
             plt.grid(True)
-            plt.ylabel("Profit Margin")
+            plt.ylabel("% of Profit Margin")
             plt.xlabel("Years")
             plt.title("{} Profit Margin".format(data["company_name"]))
         build_growth_rate_graph(data)

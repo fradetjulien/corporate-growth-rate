@@ -8,6 +8,8 @@ __pycache__/
 
 module/Pipfile.lock
 module/chromedriver
+assets/.DS_Store
+.DS_Store
 
 # Distribution / packaging
 .Python
