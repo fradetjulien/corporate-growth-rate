@@ -1,10 +1,26 @@
 import click
 from selenium import webdriver
+from matplotlib import pyplot as plt
+
+def build_profit_margin_graph(data):
+    '''
+    Build the Company Profit Margin graphic
+    '''
+    try:
+        if data["dates"] and data["profit_margin"]:
+            plt.plot(data["dates"], data["profit_margin"])
+            plt.ylabel("Profit Margin")
+            plt.xlabel("Years")
+            plt.title("{} Profit Margin".format(data["company_name"]))
+            plt.show()
+    except:
+        print("Sorry, unable to create the Graphic for the Profit Margin.")
 
 def build_graphics(data):
     '''
     Build both graphic of Profit Margin and Growth Rate
     '''
+    build_profit_margin_graph(data)
     return
 
 def compute_profit_margin(data):
@@ -15,7 +31,7 @@ def compute_profit_margin(data):
         index = 0
         while index < len(data["net_income"]) and index < len(data["total_revenue"]):
             data["profit_margin"].append(round((data["net_income"][index]\
-                                                / data["total_revenue"][index]), 4))
+                                                / data["total_revenue"][index]), 4) * 100)
             index = index + 1
     except:
         print('Sorry, error while computing Profit Margin.')
@@ -38,6 +54,21 @@ def compute_growth_rate(data):
     except:
         print("Sorry, error while computing the Growth rate.")
 
+def refactor_dates(data):
+    '''
+    Convert date format from 'day/month/year' to 'year'
+    '''
+    years = []
+    for item in data["dates"]:
+        if item == 'TTM':
+            years.append(item)
+        else:
+            years.append(int(item[-4:]))
+    years.reverse()
+    data["dates"] = years.copy()
+    del years
+    return data
+
 def refactor_data(data, variable):
     '''
     Convert values inside the Dictionnary in INT type
@@ -59,6 +90,7 @@ def compute_results(data):
     '''
     data = refactor_data(data, 'total_revenue')
     data = refactor_data(data, 'net_income')
+    data = refactor_dates(data)
     data = compute_growth_rate(data)
     data = compute_profit_margin(data)
     return data
