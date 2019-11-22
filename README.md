@@ -1,4 +1,4 @@
-# corporate-profit-revenues
+# corporate-growth-rate
 
 Python script which scrapts data from the financial statements page of a ticker page, then it computes the annual growth rate and the annual profit margin for each year. Finally, it shows two graphics of those results.
 
