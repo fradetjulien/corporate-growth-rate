@@ -2,26 +2,40 @@ import click
 from selenium import webdriver
 from matplotlib import pyplot as plt
 
+def build_growth_rate_graph(data):
+    '''
+    Build the Company Growth Rate graphic
+    '''
+    try:
+        if data["dates"] and data["growth_rate"]:
+            plt.figure(1)
+            plt.subplot(2, 1, 2)
+            plt.plot(data["dates"][1:], data["growth_rate"])
+            plt.grid(True)
+            plt.ylabel("Growth Rate")
+            plt.xlabel("Years")
+            plt.title("{} Growth Rate".format(data["company_name"]))
+            plt.tight_layout()
+            plt.show()
+    except:
+        print("Sorry, unable to create the Graphic for the Growth Rate.")
+
 def build_profit_margin_graph(data):
     '''
     Build the Company Profit Margin graphic
     '''
     try:
         if data["dates"] and data["profit_margin"]:
+            plt.figure(1)
+            plt.subplot(2, 1, 1)
             plt.plot(data["dates"], data["profit_margin"])
+            plt.grid(True)
             plt.ylabel("Profit Margin")
             plt.xlabel("Years")
             plt.title("{} Profit Margin".format(data["company_name"]))
-            plt.show()
+        build_growth_rate_graph(data)
     except:
         print("Sorry, unable to create the Graphic for the Profit Margin.")
-
-def build_graphics(data):
-    '''
-    Build both graphic of Profit Margin and Growth Rate
-    '''
-    build_profit_margin_graph(data)
-    return
 
 def compute_profit_margin(data):
     '''
@@ -47,7 +61,7 @@ def compute_growth_rate(data):
         while present < len(data["total_revenue"]):
             data["growth_rate"].append(round((data["total_revenue"][present] -\
                                             data["total_revenue"][past])\
-                                            / data["total_revenue"][past], 4))
+                                            / data["total_revenue"][past], 4) * 100)
             present = present + 1
             past = past + 1
         return data
@@ -58,28 +72,33 @@ def refactor_dates(data):
     '''
     Convert date format from 'day/month/year' to 'year'
     '''
-    years = []
-    for item in data["dates"]:
-        if item == 'TTM':
-            years.append(item)
-        else:
-            years.append(int(item[-4:]))
-    years.reverse()
-    data["dates"] = years.copy()
-    del years
+    try:
+        years = []
+        for item in data["dates"]:
+            if item == 'TTM':
+                years.append(item)
+            else:
+                years.append(int(item[-4:]))
+        years.reverse()
+        data["dates"] = years.copy()
+        del years
+    except:
+        print('Sorry, failure while converting date format from "day/month/year" to "year"')
     return data
 
 def refactor_data(data, variable):
     '''
     Convert values inside the Dictionnary in INT type
     '''
-    true_numbers = []
     try:
+        true_numbers = []
         for item in data[variable]:
             item = int(item.replace(',', ''))
             true_numbers.append(item)
         if true_numbers:
-            data[variable] = true_numbers
+            true_numbers.reverse()
+            data[variable] = true_numbers.copy()
+            del true_numbers
     except:
         print('Sorry, failure while converting values into INT.')
     return data
@@ -117,7 +136,7 @@ def scrap_company_name(data, driver):
         data["company_name"] = driver.find_element_by_xpath(\
                                '//*[@id="quote-header-info"]/div[2]/div[1]/div[1]/h1').text
     except:
-        print('Sorry, failure while retrieving Company name.')
+        print('Sorry, failure while retrieving the company name.')
     return data
 
 def init_data():
@@ -174,7 +193,7 @@ def load_data(ticker):
             driver.quit()
             return None
     except:
-        print("Error while loading data.")
+        print("Sorry, error while loading data.")
         return None
     return driver
 
@@ -196,7 +215,7 @@ def cli():
 @cli.command('graph')
 def corporate_profit_revenues():
     '''
-    Display the total revenue and net income of a Company
+    Display the margin profit as well as the growth rate of a Company
     '''
     while True:
         ticker = handle_input('Please, choose a Company and insert the corresponding ticker :\n')
@@ -205,7 +224,7 @@ def corporate_profit_revenues():
             data = scrap_data(driver)
             data = compute_results(data)
             driver.quit()
-            build_graphics(data)
+            build_profit_margin_graph(data)
             break
 
 if __name__ == '__main__':
