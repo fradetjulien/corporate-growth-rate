@@ -5,18 +5,53 @@ def compute_profit_margin(data):
     '''
     Compute the profit margin for each year
     '''
+    try:
+        index = 0
+        while index < len(data["net_income"]) and index < len(data["total_revenue"]):
+            data["profit_margin"].append(round((data["net_income"][index]\
+                                                / data["total_revenue"][index]), 4))
+            index = index + 1
+    except:
+        print('Sorry, error while computing Profit Margin.')
     return data
 
 def compute_growth_rate(data):
     '''
     Compute the year-on-year revenue growth
     '''
+    try:
+        past = 0
+        present = 1
+        while present < len(data["total_revenue"]):
+            data["growth_rate"].append(round((data["total_revenue"][present] - data["total_revenue"][past])\
+                                            / data["total_revenue"][past], 4))
+            present = present + 1
+            past = past + 1
+        return data
+    except:
+        print("Sorry, error while computing the Growth rate.")
+
+def refactor_data(data, variable):
+    '''
+    Convert values inside the Dictionnary in INT type
+    '''
+    new_list = []
+    try:
+        for item in data[variable]:
+            item = int(item.replace(',', ''))
+            new_list.append(item)
+        if new_list:
+            data[variable] = new_list
+    except:
+        print('Sorry, failure while converting values into INT.')
     return data
 
 def compute_results(data):
     '''
     Determine the annual growth rate as well as the profit margin
     '''
+    data = refactor_data(data, 'total_revenue')
+    data = refactor_data(data, 'net_income')
     data = compute_growth_rate(data)
     data = compute_profit_margin(data)
     print(data)
