@@ -1,6 +1,12 @@
 import click
 from selenium import webdriver
 
+def build_graphics(data):
+    '''
+    Build both graphic of Profit Margin and Growth Rate
+    '''
+    return
+
 def compute_profit_margin(data):
     '''
     Compute the profit margin for each year
@@ -23,7 +29,8 @@ def compute_growth_rate(data):
         past = 0
         present = 1
         while present < len(data["total_revenue"]):
-            data["growth_rate"].append(round((data["total_revenue"][present] - data["total_revenue"][past])\
+            data["growth_rate"].append(round((data["total_revenue"][present] -\
+                                            data["total_revenue"][past])\
                                             / data["total_revenue"][past], 4))
             present = present + 1
             past = past + 1
@@ -35,13 +42,13 @@ def refactor_data(data, variable):
     '''
     Convert values inside the Dictionnary in INT type
     '''
-    new_list = []
+    true_numbers = []
     try:
         for item in data[variable]:
             item = int(item.replace(',', ''))
-            new_list.append(item)
-        if new_list:
-            data[variable] = new_list
+            true_numbers.append(item)
+        if true_numbers:
+            data[variable] = true_numbers
     except:
         print('Sorry, failure while converting values into INT.')
     return data
@@ -54,7 +61,6 @@ def compute_results(data):
     data = refactor_data(data, 'net_income')
     data = compute_growth_rate(data)
     data = compute_profit_margin(data)
-    print(data)
     return data
 
 def scrap_values(data, driver, path, variable):
@@ -92,7 +98,7 @@ def init_data():
         "net_income": [],
         "dates": [],
         "growth_rate": [],
-        "profit_margin": []
+        "profit_margin": [],
     }
     return data
 
@@ -167,6 +173,7 @@ def corporate_profit_revenues():
             data = scrap_data(driver)
             data = compute_results(data)
             driver.quit()
+            build_graphics(data)
             break
 
 if __name__ == '__main__':
