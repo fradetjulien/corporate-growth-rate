@@ -35,7 +35,7 @@ def build_profit_margin_graph(data):
             plt.title("{} Profit Margin".format(data["company_name"]))
         build_growth_rate_graph(data)
     except Exception as error:
-        print("Sorry, unable to create the Graphic for the Profit Margin.\n".format(error))
+        print("Sorry, unable to create the Graphic for the Profit Margin.\n{}".format(error))
 
 def compute_profit_margin(data):
     '''
