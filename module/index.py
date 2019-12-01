@@ -17,8 +17,8 @@ def build_growth_rate_graph(data):
             plt.title("{} Growth Rate".format(data["company_name"]))
             plt.tight_layout()
             plt.show()
-    except:
-        print("Sorry, unable to create the Graphic for the Growth Rate.")
+    except Exception as error:
+        print("Sorry, unable to create the Graphic for the Growth Rate.\n{}".format(error))
 
 def build_profit_margin_graph(data):
     '''
@@ -34,8 +34,8 @@ def build_profit_margin_graph(data):
             plt.xlabel("Years")
             plt.title("{} Profit Margin".format(data["company_name"]))
         build_growth_rate_graph(data)
-    except:
-        print("Sorry, unable to create the Graphic for the Profit Margin.")
+    except Exception as error:
+        print("Sorry, unable to create the Graphic for the Profit Margin.\n".format(error))
 
 def compute_profit_margin(data):
     '''
@@ -47,8 +47,8 @@ def compute_profit_margin(data):
             data["profit_margin"].append(round((data["net_income"][index]\
                                                 / data["total_revenue"][index]), 4) * 100)
             index = index + 1
-    except:
-        print('Sorry, error while computing Profit Margin.')
+    except Exception as error:
+        print('Sorry, error while computing Profit Margin.\n{}'.format(error))
     return data
 
 def compute_growth_rate(data):
@@ -65,8 +65,8 @@ def compute_growth_rate(data):
             present = present + 1
             past = past + 1
         return data
-    except:
-        print("Sorry, error while computing the Growth rate.")
+    except Exception as error:
+        print("Sorry, error while computing the Growth rate.\n{}".format(error))
 
 def refactor_dates(data):
     '''
@@ -82,8 +82,8 @@ def refactor_dates(data):
         years.reverse()
         data["dates"] = years.copy()
         del years
-    except:
-        print('Sorry, failure while converting date format from "day/month/year" to "year"')
+    except Exception as error:
+        print('Sorry, failure while converting date format from "day/month/year" to "year"\n{}'.format(error))
     return data
 
 def refactor_data(data, variable):
@@ -99,8 +99,8 @@ def refactor_data(data, variable):
             true_numbers.reverse()
             data[variable] = true_numbers.copy()
             del true_numbers
-    except:
-        print('Sorry, failure while converting values into INT.')
+    except Exception as error:
+        print('Sorry, failure while converting values into INT.\n{}'.format(error))
     return data
 
 def compute_results(data):
@@ -124,8 +124,8 @@ def scrap_values(data, driver, path, variable):
             data[variable].append(driver.find_element_by_xpath(path.format(index)).text)
             index = index + 1
         data[variable].pop(0)
-    except:
-        print('Sorry, failure while retrieving {}.'.format(variable))
+    except Exception as error:
+        print('Sorry, failure while retrieving {}.\n{}'.format(variable, error))
     return data
 
 def scrap_company_name(data, driver):
@@ -135,8 +135,8 @@ def scrap_company_name(data, driver):
     try:
         data["company_name"] = driver.find_element_by_xpath(\
                                '//*[@id="quote-header-info"]/div[2]/div[1]/div[1]/h1').text
-    except:
-        print('Sorry, failure while retrieving the company name.')
+    except Exception as error:
+        print('Sorry, failure while retrieving the company name.\n{}'.format(error))
     return data
 
 def init_data():
@@ -194,8 +194,8 @@ def load_data(ticker):
                         'N/A'):
             driver.quit()
             return None
-    except:
-        print("Sorry, error while loading data.")
+    except Exception as error:
+        print("Sorry, error while loading data.\n{}".format(error))
         return None
     return driver
 
